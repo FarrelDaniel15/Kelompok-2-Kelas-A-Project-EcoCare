@@ -1,0 +1,1 @@
+ID Transaksi|ID Tanaman|Nama Pembeli|Tanggal|Jumlah|Harga Satuan|Total Penjualan
