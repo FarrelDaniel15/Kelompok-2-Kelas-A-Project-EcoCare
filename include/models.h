@@ -72,30 +72,35 @@ typedef struct {
 } Distribusi;
 
 // ==========================================
-// 3. LINKED LIST NODES (Konsep 6.H)
+// 3. DOUBLY LINKED LIST NODES (Konsep 6.H)
 // ==========================================
 typedef struct NodeTanaman {
     Tanaman data;
+    struct NodeTanaman *prev;
     struct NodeTanaman *next;
 } NodeTanaman;
 
 typedef struct NodePanen {
     DataPanen data;
+    struct NodePanen *prev;
     struct NodePanen *next;
 } NodePanen;
 
 typedef struct NodeBiaya {
     BiayaProduksi data;
+    struct NodeBiaya *prev;
     struct NodeBiaya *next;
 } NodeBiaya;
 
 typedef struct NodePenjualan {
     TransaksiPenjualan data;
+    struct NodePenjualan *prev;
     struct NodePenjualan *next;
 } NodePenjualan;
 
 typedef struct NodeDistribusi {
     Distribusi data;
+    struct NodeDistribusi *prev;
     struct NodeDistribusi *next;
 } NodeDistribusi;
 
@@ -119,14 +124,14 @@ typedef struct NodeRiwayat {
 } NodeRiwayat;
 
 // ==========================================
-// 5. DEKLARASI GLOBAL HEAD & TOP (extern)
+// 5. DEKLARASI GLOBAL HEAD, TAIL & TOP (extern)
 // ==========================================
 // Inisialisasi (= NULL) wajib diletakkan satu kali di dalam main.c
-extern NodeTanaman *headTanaman;
-extern NodePanen *headPanen;
-extern NodeBiaya *headBiaya;
-extern NodePenjualan *headPenjualan;
-extern NodeDistribusi *headDistribusi;
+extern NodeTanaman *headTanaman, *tailTanaman;
+extern NodePanen *headPanen, *tailPanen;
+extern NodeBiaya *headBiaya, *tailBiaya;
+extern NodePenjualan *headPenjualan, *tailPenjualan;
+extern NodeDistribusi *headDistribusi, *tailDistribusi;
 extern NodeRiwayat *topRiwayat;
 
 #endif
