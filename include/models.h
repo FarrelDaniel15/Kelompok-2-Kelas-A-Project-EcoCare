@@ -1,5 +1,6 @@
 #ifndef MODELS_H
 #define MODELS_H
+#define TABLE_SIZE 31
 
 // ==========================================
 // 1. ENUM & UNION (Konsep 6.G: Tagged Union)
@@ -127,7 +128,7 @@ typedef struct NodeRiwayat {
 // 5. DEKLARASI GLOBAL HEAD, TAIL & TOP (extern)
 // ==========================================
 // Inisialisasi (= NULL) wajib diletakkan satu kali di dalam main.c
-extern NodeTanaman *headTanaman, *tailTanaman;
+extern NodeTanaman *hashTableTanaman[TABLE_SIZE];
 extern NodePanen *headPanen, *tailPanen;
 extern NodeBiaya *headBiaya, *tailBiaya;
 extern NodePenjualan *headPenjualan, *tailPenjualan;
