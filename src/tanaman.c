@@ -191,7 +191,7 @@ void tambahDataTanaman() {
     printf("\n===== Tambah Data Tanaman =====");
     printf("\nMasukkan ID tanaman        : ");
     scanf("%d", &tanamanBaru.id);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
 
     //Panggil function cari data tanaman di sini untuk mengecek bahwa ID belum digunakan
     if (cariTanamanById(tanamanBaru.id) != NULL) {
@@ -213,7 +213,7 @@ void tambahDataTanaman() {
 
     printf("\nMasukkan harga jual tanaman: ");
     scanf("%f", &tanamanBaru.harga_jual);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (tanamanBaru.harga_jual < 0) {
         printf("\nHarga jual tanaman tidak boleh negatif\n");
         return;
@@ -221,7 +221,7 @@ void tambahDataTanaman() {
 
     printf("\nMasukkan stok tanaman      : ");
     scanf("%f", &tanamanBaru.stok);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (tanamanBaru.stok < 0) {
         printf("\nStok tanaman tidak boleh negatif\n");
         return;
@@ -244,7 +244,7 @@ void ubahDataTanaman() {
     printf("\n===== Ubah Data Tanaman =====");
     printf("\nMasukkan ID tanaman        : ");
     scanf("%d", &id_tanaman_lama);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     NodeTanaman *nodeTanamanUbah = cariTanamanById(id_tanaman_lama);
     if (nodeTanamanUbah == NULL) {
         printf("\nID tanaman tidak ditemukan\n");
@@ -257,7 +257,7 @@ void ubahDataTanaman() {
 
     printf("\nUbah ID tanaman        : ");
     scanf("%d", &id_tanaman_baru);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (id_tanaman_baru != id_tanaman_lama && cariTanamanById(id_tanaman_baru) != NULL) {
         printf("\nID tanaman telah digunakan tanaman lain. Gunakan ID lain\n");
         return;
@@ -279,7 +279,7 @@ void ubahDataTanaman() {
     float hargaJualLama = dataTanamanUbah.harga_jual;
     printf("\nUbah harga jual tanaman: ");
     scanf("%f", &dataTanamanUbah.harga_jual);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (dataTanamanUbah.harga_jual < 0) {
         dataTanamanUbah.harga_jual = hargaJualLama;
         printf("\nHarga jual tanaman tidak boleh negatif. Perubahan dibatalkan.\n");
@@ -289,7 +289,7 @@ void ubahDataTanaman() {
     float stokTanamanLama = dataTanamanUbah.stok;
     printf("\nUbah stok tanaman      : ");
     scanf("%f", &dataTanamanUbah.stok);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (dataTanamanUbah.stok < 0) {
         dataTanamanUbah.stok = stokTanamanLama;
         printf("\nStok tanaman tidak boleh negatif. Perubahan dibatalkan.\n");
@@ -322,7 +322,7 @@ void hapusDataTanaman() {
     printf("\n===== Hapus Data Tanaman =====");
     printf("\nMasukkan ID tanaman        : ");
     scanf("%d", &id_tanaman);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     NodeTanaman *nodeTanamanHapus = cariTanamanById(id_tanaman);
     if (nodeTanamanHapus == NULL) {
         printf("\nID tanaman tidak ditemukan. Hapus tanaman dibatalkan.\n");
@@ -335,7 +335,7 @@ void hapusDataTanaman() {
 
     printf("Yakin ingin hapus data tanaman? (y/n): ");
     scanf(" %c", &konfirmasi);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (konfirmasi == 'y' || konfirmasi == 'Y') {
         printf("\nPenghapusan data tanaman berhasil!\n");
         hapusTanamanById(id_tanaman);
@@ -356,7 +356,7 @@ void cariDataTanaman() {
     printf("\n===== Cari Data Tanaman =====");
     printf("\nMasukkan ID tanaman        : ");
     scanf("%d", &id_tanaman);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     NodeTanaman *nodeTanamanCari = cariTanamanById(id_tanaman);
     if (nodeTanamanCari == NULL) {
         printf("\nID tanaman tidak ditemukan.\n");
@@ -430,7 +430,7 @@ void tambahHasilPanen() {
     printf("\n======= Tambah Hasil Panen =======");
     printf("\nMasukkan ID tanaman                : ");
     scanf("%d", &id_tanaman);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
 
     NodeTanaman *nodeTanamanCari = cariTanamanById(id_tanaman);
     if (nodeTanamanCari == NULL) {
@@ -449,7 +449,7 @@ void tambahHasilPanen() {
 
     printf("\nMasukkan jumlah hasil panen (angka): ");
     scanf("%f", &dataPanenBaru.jumlah_panen);
-    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (dataPanenBaru.jumlah_panen <= 0) {
         printf("\nJumlah hasil panen harus lebih besar dari nol.\n");
         return;
@@ -507,7 +507,118 @@ void tampilkanRiwayatPanen() {
 /* FITUR 2: Akhir */
 
 
-/* FITUR 3: Awal, Rekapitulasi panen setiap berdasarkan komoditas */
+/* FITUR 3: Awal, Rekapitulasi panen setiap berdasarkan periode/ komoditas */
+void rekapitulasiPanen() {
+    int pilihan;
+    printf("\n======= Rekapitulasi Hasil Panen =======\n");
+    printf("1. Rekapitulasi per Komoditas (Tanaman)\n");
+    printf("2. Rekapitulasi per Periode (Bulan-Tahun)\n");
+    printf("Pilihan Anda: ");
+    if (scanf("%d", &pilihan) != 1) {
+        while (getchar() != '\n');
+        printf("\nInput tidak valid.\n");
+        return;
+    }
+    while (getchar() != '\n');
+
+    if (pilihan == 1) {
+        int adaKomoditas = 0;
+        printf("\n======================== Rekapitulasi Panen per Komoditas ========================\n");
+        printf("%-8s | %-20s | %-12s | %-15s | %-10s\n",
+               "ID", "Nama Komoditas", "Frekuensi", "Total Panen", "Satuan");
+        printf("----------------------------------------------------------------------------------\n");
+
+        // Loop luar untuk setiap tanaman di hashTableTanaman
+        for (int i = 0; i < TABLE_SIZE_TANAMAN; i++) {
+            NodeTanaman *currTanaman = hashTableTanaman[i];
+            while (currTanaman != NULL) {
+                adaKomoditas = 1;
+                int frekuensi = 0;
+                float totalPanen = 0.0f;
+
+                // Loop dalam untuk menjumlahkan setiap panen dari tanaman
+                for (int j = 0; j < TABLE_SIZE_PANEN; j++) {
+                    NodePanen *currPanen = hashTablePanen[i];
+                    while (currPanen != NULL) {
+                        if (currPanen->data.id_tanaman == currTanaman->data.id) {
+                            frekuensi++;
+                            totalPanen += currPanen->data.jumlah_panen;
+                        }
+                        currPanen = currPanen->next;
+                    }
+                }
+                printf("%-8d | %-20s | %-12d | %-15.2f | %-10s\n", currTanaman->data.id, currTanaman->data.nama, frekuensi, totalPanen, currTanaman->data.satuan);
+                currTanaman = currTanaman->next;
+            }
+        }
+        if (!adaKomoditas) {
+            printf("Belum ada data komoditas tanaman yang tersimpan.\n");
+        }
+        printf("==================================================================================\n");
+    }
+    else if (pilihan == 2) {
+        char periodeTarget[8]; // format MM-YYYY
+        printf("\nMasukkan periode bulan-tahun (MM-YYYY): ");
+        fgets(periodeTarget, sizeof(periodeTarget), stdin);
+        if (strchr(periodeTarget, '\n') == NULL) {
+            while (getchar() != '\n');
+        } else {
+            periodeTarget[strcspn(periodeTarget, "\n")] = '\0';
+        }
+
+        int adaData = 0;
+        int totalFrekuensi = 0;
+        int totalSemuaPanen = 0.0f;
+
+        printf("\n=================== Rekapitulasi Panen Periode %s ===================\n", periodeTarget);
+        printf("%-8s | %-20s | %-12s | %-15s | %-10s\n",
+               "ID", "Nama Komoditas", "Frekuensi", "Total Panen", "Satuan");
+        printf("----------------------------------------------------------------------------\n");
+
+        for (int i = 0; i < TABLE_SIZE_TANAMAN; i++) {
+            NodeTanaman *currTanaman = hashTableTanaman[i];
+            while (currTanaman != NULL)
+            {
+                int frekuensi = 0;
+                float totalPanen = 0.0f;
+
+                for (int j = 0; j < TABLE_SIZE_PANEN; j++) {
+                    NodePanen *currPanen = hashTablePanen[i];
+                    while (currPanen != NULL)
+                    {
+                        // Cek kecocokan ID dan 7 karakter terakhir dari tanggal
+                        if (currPanen->data.id_tanaman == currTanaman->data.id && strlen(currPanen->data.tanggal) >= 10 && strcmp(&currPanen->data.tanggal[3], periodeTarget) == 0) {
+                            frekuensi++;
+                            totalPanen += currPanen->data.jumlah_panen;
+                        }
+                        currPanen = currPanen->next;
+                    }
+                }
+
+                if (frekuensi > 0) {
+                    printf("%-8d | %-20s | %-12d | %-15.2f | %-10s\n", currTanaman->data.id, currTanaman->data.nama, frekuensi, totalPanen, currTanaman->data.satuan);
+                    adaData = 1;
+                    totalFrekuensi += frekuensi;
+                    totalSemuaPanen += totalPanen;
+                }
+
+                currTanaman = currTanaman->next;
+            }
+        }
+
+        if (!adaData) {
+            printf("Tidak ada catatan panen pada periode %s.\n", periodeTarget);
+        }
+        else {
+            printf("----------------------------------------------------------------------------\n");
+            printf("Total Frekuensi Panen: %d kali | Total Volume Panen: %.2f\n", totalFrekuensi, totalSemuaPanen);
+        }
+        printf("============================================================================\n");
+    }
+    else {
+        printf("\nPilihan tidak valid\n");
+    }
+}
 /* FITUR 3: Akhir */
 
 
