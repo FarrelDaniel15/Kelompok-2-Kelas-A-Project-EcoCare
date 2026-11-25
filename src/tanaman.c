@@ -101,7 +101,7 @@ void insertPanenNode(DataPanen data) {
     baru->data = data;
     baru->prev = NULL;
     baru->next = hashTablePanen[index];
-    
+
     if (baru->data.id_panen >= id_panen_terakhir) {
         id_panen_terakhir = baru->data.id_panen + 1;
     }
@@ -476,6 +476,34 @@ void tambahHasilPanen() {
 
 
 /* FITUR 2: Awal, Tampilkan riwayat panen (tampilkan semua data panen dari ID panen, ID tanaman, tanggal panen, jumlah hasil panen, kualitas, dan lokasi) */
+void tampilkanRiwayatPanen() {
+    int adaData = 0;
+    printf("\n======================================== Riwayat Panen =========================================\n");
+    printf("%-8s | %-10s | %-13s | %-12s | %-15s | %-23s\n",
+           "ID Panen", "ID Tanaman", "Tanggal Panen", "Jumlah Panen", "Kualitas", "Lokasi");
+    printf("------------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < TABLE_SIZE_PANEN; i++) {
+        NodePanen *curr = hashTablePanen[i];
+        while (curr != NULL) {
+            printf("%-8d | %-10d | %-13s | %-12.2f | %-15s | %-23s\n",
+                   curr->data.id_panen,
+                   curr->data.id_tanaman,
+                   curr->data.tanggal,
+                   curr->data.jumlah_panen,
+                   curr->data.kualitas,
+                   curr->data.lokasi);
+            adaData = 1;
+            curr = curr->next;
+        }
+    }
+
+    if (!adaData) {
+        printf("Belum ada data riwayat panen yang tersimpan.\n");
+    }
+    printf("================================================================================================\n");
+    return;
+}
 /* FITUR 2: Akhir */
 
 
