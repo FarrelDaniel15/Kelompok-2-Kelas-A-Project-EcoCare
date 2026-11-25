@@ -129,7 +129,7 @@ typedef struct NodeRiwayat {
 // ==========================================
 // Inisialisasi (= NULL) wajib diletakkan satu kali di dalam main.c
 extern NodeTanaman *hashTableTanaman[TABLE_SIZE];
-extern NodePanen *headPanen, *tailPanen;
+extern NodePanen *hashTablePanen[TABLE_SIZE];
 extern NodeBiaya *headBiaya, *tailBiaya;
 extern NodePenjualan *headPenjualan, *tailPenjualan;
 extern NodeDistribusi *headDistribusi, *tailDistribusi;
