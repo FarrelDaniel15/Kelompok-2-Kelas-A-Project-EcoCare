@@ -5,13 +5,14 @@
 #include "tanaman.h"
 #include "storage_undo.h"
 
+int id_panen_terakhir;
 
 // Function hashTanaman untuk melakukan hashing index dengan menggunakan id
 unsigned int hashTanaman(int id) {
     if (id < 0) {
         id = -id;
     }
-    return (unsigned int)id % TABLE_SIZE;
+    return (unsigned int)id % TABLE_SIZE_TANAMAN;
 }
 
 
@@ -20,7 +21,7 @@ void insertTanamanNode(Tanaman data) {
     unsigned int index = hashTanaman(data.id);
     NodeTanaman *baru = (NodeTanaman*) malloc(sizeof(NodeTanaman));
     if (baru == NULL) {
-        printf("ERROR: Gagal mengalokasikan memori untuk data tanaman!");
+        printf("ERROR: Gagal mengalokasikan memori untuk data tanaman!\n");
         return;
     }
 
@@ -79,7 +80,78 @@ void hapusTanamanById(int id) {
 }
 
 
-/* MENU 2: Awal*/
+// Function hashPanen untuk melakukan hashing index dengan menggunakan id
+unsigned int hashPanen(int id_panen) {
+    if (id_panen < 0) {
+        id_panen = -id_panen;
+    }
+    return (unsigned int)id_panen % TABLE_SIZE_PANEN;
+}
+
+
+// Function insertPanenNode untuk load seluruh data dari file.txt menjadi sebuah hash table dengan bucket berupa doubly linked lists
+void insertPanenNode(DataPanen data) {
+    unsigned int index = hashPanen(data.id_panen);
+    NodePanen *baru = (NodePanen*) malloc(sizeof(NodePanen));
+    if (baru == NULL) {
+        printf("ERROR: Program gagal mengalokasikan memori untuk data panen!\n");
+        return;
+    }
+
+    baru->data = data;
+    baru->prev = NULL;
+    baru->next = hashTablePanen[index];
+
+    if (hashTablePanen[index] != NULL) {
+        hashTablePanen[index]->prev = baru;
+    }
+    hashTablePanen[index] = baru;
+    return;
+}
+
+
+// Function cariPanenById untuk mencari data panen berdasarkan ID panen yang diberikan lalu mengembalikan NodePanen yang sesuai
+NodePanen *cariPanenById(int id_panen) {
+    unsigned int index = hashPanen(id_panen);
+    NodePanen *curr = hashTablePanen[index];
+
+    while (curr != NULL) {
+        if (curr->data.id_panen == id_panen) {
+            return curr;
+        }
+        curr = curr->next;
+    }
+    return NULL;
+}
+
+
+// Function hapusPanenById untuk menghapus data panen berdasarkan ID panen yang akan digunakan saat proses (undo)
+void hapusPanenById(int id_panen) {
+    unsigned int index = hashPanen(id_panen);
+    NodePanen *curr = hashTablePanen[index];
+
+    while (curr != NULL) {
+        if (curr->data.id_panen == id_panen) {
+            if (curr->prev != NULL) {
+                curr->prev->next = curr->next;
+            } 
+            else {
+                hashTablePanen[index] = curr->next;
+            }
+
+            if (curr->next != NULL) {
+                curr->next->prev = curr->prev;
+            }
+            free(curr);
+            return;
+        }
+        curr = curr->next;
+    }
+    return;
+}
+
+
+/* MENU 2 (Kelola Data Tanaman): Awal*/
 /* FITUR 1: Awal, Tampilkan daftar tanaman (ID, Nama, Kategori, Satuan, Harga Jual, Stok) */
 void tampilkanDaftarTanaman() {
     int adaData = 0;
@@ -88,7 +160,7 @@ void tampilkanDaftarTanaman() {
            "ID", "Nama Tanaman", "Kategori", "Satuan", "Harga Jual", "Stok");
     printf("-----------------------------------------------------------------------------------------\n");
 
-    for (int i = 0; i < TABLE_SIZE; i++) {
+    for (int i = 0; i < TABLE_SIZE_TANAMAN; i++) {
         NodeTanaman *curr = hashTableTanaman[i];
         while (curr != NULL)
         {
@@ -340,3 +412,20 @@ void menu2KelolaTanaman() {
     } while (opsi != 0);
 }
 /* MENU 2: Akhir*/
+
+
+/* MENU 3 (Pencatatan Hasil Panen): Awal */
+/* FITUR 1: Awal, Menambah hasil panen (meminta ID tanaman, tanggal panen, jumlah hasil panen, kualitas, dan lokasi). Lalu perbarui stok tanaman yang dipanen */
+/* FITUR 1: Akhir */
+
+
+/* FITUR 2: Awal, Tampilkan riwayat panen (tampilkan semua data panen dari ID panen, ID tanaman, tanggal panen, jumlah hasil panen, kualitas, dan lokasi) */
+/* FITUR 2: Akhir */
+
+
+/* FITUR 3: Awal, Rekapitulasi panen setiap berdasarkan komoditas */
+/* FITUR 3: Akhir */
+
+
+/* Tampilan Menu 3 */
+/* MENU 3: Akhir*/
