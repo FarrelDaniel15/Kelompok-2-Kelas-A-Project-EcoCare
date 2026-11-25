@@ -538,7 +538,7 @@ void rekapitulasiPanen() {
 
                 // Loop dalam untuk menjumlahkan setiap panen dari tanaman
                 for (int j = 0; j < TABLE_SIZE_PANEN; j++) {
-                    NodePanen *currPanen = hashTablePanen[i];
+                    NodePanen *currPanen = hashTablePanen[j];
                     while (currPanen != NULL) {
                         if (currPanen->data.id_tanaman == currTanaman->data.id) {
                             frekuensi++;
@@ -568,7 +568,7 @@ void rekapitulasiPanen() {
 
         int adaData = 0;
         int totalFrekuensi = 0;
-        int totalSemuaPanen = 0.0f;
+        float totalSemuaPanen = 0.0f;
 
         printf("\n=================== Rekapitulasi Panen Periode %s ===================\n", periodeTarget);
         printf("%-8s | %-20s | %-12s | %-15s | %-10s\n",
@@ -583,7 +583,7 @@ void rekapitulasiPanen() {
                 float totalPanen = 0.0f;
 
                 for (int j = 0; j < TABLE_SIZE_PANEN; j++) {
-                    NodePanen *currPanen = hashTablePanen[i];
+                    NodePanen *currPanen = hashTablePanen[j];
                     while (currPanen != NULL)
                     {
                         // Cek kecocokan ID dan 7 karakter terakhir dari tanggal
@@ -623,4 +623,42 @@ void rekapitulasiPanen() {
 
 
 /* Tampilan Menu 3 */
+void menu3PencatatanHasilPanen() {
+    int opsi;
+    do {
+        printf("\n========== Pencatatan Hasil Panen ==========\n");
+        printf("Ketik angka 0 - 3 untuk memilih submenu:\n");
+        printf("0. Kembali ke menu utama\n");
+        printf("1. Tambahkan hasil panen\n");
+        printf("2. Tampilkan riwayat panen\n");
+        printf("3. Rekapitulasi hasil panen\n");
+        printf("Pilihan Anda: ");
+        
+        if (scanf("%d", &opsi) != 1) {
+            while (getchar() != '\n');
+            opsi = -1;
+        } else {
+            while (getchar() != '\n');
+        }
+
+        switch (opsi) {
+            case 1:
+                tambahHasilPanen();
+                break;
+            case 2:
+                tampilkanRiwayatPanen();
+                break;
+            case 3:
+                rekapitulasiPanen();
+                break;
+            case 0:
+                printf("\nKembali ke menu utama...\n");
+                break;
+            default:
+                printf("\nPilihan tidak valid! Silakan masukkan angka 0 - 3.\n");
+                break;
+        }
+    } while (opsi != 0);
+    return;
+}
 /* MENU 3: Akhir*/
