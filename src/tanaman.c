@@ -5,7 +5,7 @@
 #include "tanaman.h"
 #include "storage_undo.h"
 
-int id_panen_terakhir;
+int id_panen_terakhir = 1;
 
 // Function hashTanaman untuk melakukan hashing index dengan menggunakan id
 unsigned int hashTanaman(int id) {
@@ -21,7 +21,7 @@ void insertTanamanNode(Tanaman data) {
     unsigned int index = hashTanaman(data.id);
     NodeTanaman *baru = (NodeTanaman*) malloc(sizeof(NodeTanaman));
     if (baru == NULL) {
-        printf("ERROR: Gagal mengalokasikan memori untuk data tanaman!\n");
+        printf("\nERROR: Gagal mengalokasikan memori untuk data tanaman!\n");
         return;
     }
 
@@ -94,13 +94,17 @@ void insertPanenNode(DataPanen data) {
     unsigned int index = hashPanen(data.id_panen);
     NodePanen *baru = (NodePanen*) malloc(sizeof(NodePanen));
     if (baru == NULL) {
-        printf("ERROR: Program gagal mengalokasikan memori untuk data panen!\n");
+        printf("\nERROR: Program gagal mengalokasikan memori untuk data panen!\n");
         return;
     }
 
     baru->data = data;
     baru->prev = NULL;
     baru->next = hashTablePanen[index];
+    
+    if (baru->data.id_panen >= id_panen_terakhir) {
+        id_panen_terakhir = baru->data.id_panen + 1;
+    }
 
     if (hashTablePanen[index] != NULL) {
         hashTablePanen[index]->prev = baru;
@@ -173,7 +177,7 @@ void tampilkanDaftarTanaman() {
 
     if (!adaData)
     {
-        printf("Belum ada data tanaman yang tersimpan");
+        printf("Belum ada data tanaman yang tersimpan\n");
     }
     return;
 }
@@ -191,7 +195,7 @@ void tambahDataTanaman() {
 
     //Panggil function cari data tanaman di sini untuk mengecek bahwa ID belum digunakan
     if (cariTanamanById(tanamanBaru.id) != NULL) {
-        printf("ID tanaman telah digunakan. Gunakan ID lain");
+        printf("\nID tanaman telah digunakan. Gunakan ID lain\n");
         return;
     }
 
@@ -211,7 +215,7 @@ void tambahDataTanaman() {
     scanf("%f", &tanamanBaru.harga_jual);
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     if (tanamanBaru.harga_jual < 0) {
-        printf("Harga jual tanaman tidak boleh negatif");
+        printf("\nHarga jual tanaman tidak boleh negatif\n");
         return;
     }
 
@@ -219,7 +223,7 @@ void tambahDataTanaman() {
     scanf("%f", &tanamanBaru.stok);
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     if (tanamanBaru.stok < 0) {
-        printf("stok tanaman tidak boleh negatif");
+        printf("\nStok tanaman tidak boleh negatif\n");
         return;
     }
 
@@ -238,12 +242,12 @@ void ubahDataTanaman() {
     int id_tanaman_lama, id_tanaman_baru;
 
     printf("\n===== Ubah Data Tanaman =====");
-    printf("\nMasukkan ID tanaman        : \n");
+    printf("\nMasukkan ID tanaman        : ");
     scanf("%d", &id_tanaman_lama);
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     NodeTanaman *nodeTanamanUbah = cariTanamanById(id_tanaman_lama);
     if (nodeTanamanUbah == NULL) {
-        printf("ID tanaman tidak ditemukan");
+        printf("\nID tanaman tidak ditemukan\n");
         return;
     }
 
@@ -255,7 +259,7 @@ void ubahDataTanaman() {
     scanf("%d", &id_tanaman_baru);
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     if (id_tanaman_baru != id_tanaman_lama && cariTanamanById(id_tanaman_baru) != NULL) {
-        printf("ID tanaman telah digunakan tanaman lain. Gunakan ID lain");
+        printf("\nID tanaman telah digunakan tanaman lain. Gunakan ID lain\n");
         return;
     }
     dataTanamanUbah.id = id_tanaman_baru;
@@ -278,7 +282,7 @@ void ubahDataTanaman() {
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     if (dataTanamanUbah.harga_jual < 0) {
         dataTanamanUbah.harga_jual = hargaJualLama;
-        printf("Harga jual tanaman tidak boleh negatif. Perubahan dibatalkan.");
+        printf("\nHarga jual tanaman tidak boleh negatif. Perubahan dibatalkan.\n");
         return;
     }
 
@@ -288,7 +292,7 @@ void ubahDataTanaman() {
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     if (dataTanamanUbah.stok < 0) {
         dataTanamanUbah.stok = stokTanamanLama;
-        printf("Stok tanaman tidak boleh negatif. Perubahan dibatalkam");
+        printf("\nStok tanaman tidak boleh negatif. Perubahan dibatalkan.\n");
         return;
     }
 
@@ -316,12 +320,12 @@ void hapusDataTanaman() {
     char konfirmasi;
 
     printf("\n===== Hapus Data Tanaman =====");
-    printf("\nMasukkan ID tanaman        : \n");
+    printf("\nMasukkan ID tanaman        : ");
     scanf("%d", &id_tanaman);
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     NodeTanaman *nodeTanamanHapus = cariTanamanById(id_tanaman);
     if (nodeTanamanHapus == NULL) {
-        printf("ID tanaman tidak ditemukan. Hapus tanaman dibatalkan.");
+        printf("\nID tanaman tidak ditemukan. Hapus tanaman dibatalkan.\n");
         return;
     }
 
@@ -350,18 +354,19 @@ void cariDataTanaman() {
     int id_tanaman;
 
     printf("\n===== Cari Data Tanaman =====");
-    printf("\nMasukkan ID tanaman        : \n");
+    printf("\nMasukkan ID tanaman        : ");
     scanf("%d", &id_tanaman);
     while (getchar() != '\n'); // mengambil "enter" yang tersisa
     NodeTanaman *nodeTanamanCari = cariTanamanById(id_tanaman);
     if (nodeTanamanCari == NULL) {
-        printf("ID tanaman tidak ditemukan.");
+        printf("\nID tanaman tidak ditemukan.\n");
         return;
     }
 
     Tanaman dataTanamanCari = nodeTanamanCari->data;
     printf("\nData tanaman:\n");
     printf("ID: %d | Nama: %s | Kategori: %s | Satuan: %s | Harga Jual: %.0f | Stok: %.2f\n", dataTanamanCari.id, dataTanamanCari.nama, dataTanamanCari.kategori, dataTanamanCari.satuan, dataTanamanCari.harga_jual, dataTanamanCari.stok);
+    return;
 }
 /* FITUR 5: Akhir */
 
@@ -403,19 +408,70 @@ void menu2KelolaTanaman() {
                 cariDataTanaman();
                 break;
             case 0:
-                printf("Kembali ke menu utama...\n");
+                printf("\nKembali ke menu utama...\n");
                 break;
             default:
-                printf("Pilihan tidak valid! Silakan masukkan angka 0 - 5.\n");
+                printf("\nPilihan tidak valid! Silakan masukkan angka 0 - 5.\n");
                 break;
         }
     } while (opsi != 0);
+    return;
 }
 /* MENU 2: Akhir*/
 
 
 /* MENU 3 (Pencatatan Hasil Panen): Awal */
 /* FITUR 1: Awal, Menambah hasil panen (meminta ID tanaman, tanggal panen, jumlah hasil panen, kualitas, dan lokasi). Lalu perbarui stok tanaman yang dipanen */
+void tambahHasilPanen() {
+    int id_tanaman;
+    DataPanen dataPanenBaru;
+    dataPanenBaru.id_panen = id_panen_terakhir;
+
+    printf("\n======= Tambah Hasil Panen =======");
+    printf("\nMasukkan ID tanaman                : ");
+    scanf("%d", &id_tanaman);
+    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+
+    NodeTanaman *nodeTanamanCari = cariTanamanById(id_tanaman);
+    if (nodeTanamanCari == NULL) {
+        printf("\nID tanaman tidak ditemukan.\n");
+        return;
+    }
+    dataPanenBaru.id_tanaman = nodeTanamanCari->data.id;
+
+    printf("\nMasukkan tanggal panen (DD-MM-YYYY): ");
+    fgets(dataPanenBaru.tanggal, sizeof(dataPanenBaru.tanggal), stdin);
+    if (strchr(dataPanenBaru.tanggal, '\n') == NULL) {
+        while (getchar() != '\n'); // Buang sisa karakter jika input >= 10 karakter
+    } else {
+        dataPanenBaru.tanggal[strcspn(dataPanenBaru.tanggal, "\n")] = '\0';
+    }
+
+    printf("\nMasukkan jumlah hasil panen (angka): ");
+    scanf("%f", &dataPanenBaru.jumlah_panen);
+    while (getchar() != '\n'); // mengambil "enter" yang tersisa
+    if (dataPanenBaru.jumlah_panen <= 0) {
+        printf("\nJumlah hasil panen harus lebih besar dari nol.\n");
+        return;
+    }
+
+    printf("\nMasukkan kualitas panen            : ");
+    fgets(dataPanenBaru.kualitas, sizeof(dataPanenBaru.kualitas), stdin);
+    dataPanenBaru.kualitas[strcspn(dataPanenBaru.kualitas, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
+
+    printf("\nMasukkan lokasi panen              : ");
+    fgets(dataPanenBaru.lokasi, sizeof(dataPanenBaru.lokasi), stdin);
+    dataPanenBaru.lokasi[strcspn(dataPanenBaru.lokasi, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
+
+    insertPanenNode(dataPanenBaru);
+    printf("\nPenambahan data panen berhasil!\n");
+
+    nodeTanamanCari->data.stok += dataPanenBaru.jumlah_panen;
+
+    // TODO: Tambahkan function untuk push ke riwayat (setelah storage_undo dikerjakan)
+
+    return;
+}
 /* FITUR 1: Akhir */
 
 
