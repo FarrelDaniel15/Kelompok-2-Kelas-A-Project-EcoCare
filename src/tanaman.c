@@ -157,7 +157,7 @@ void hapusPanenById(int id_panen) {
 
 
 // Function catatPerubahanStok untuk mencatat seluruh kegiatan yang mengubah stok sebuah komoditas
-void catatPerubahanStok(int id_tanaman, char nama_tanaman[50], char sumber[30], float stok_lama, float stok_baru) {
+void catatPerubahanStok(int id_tanaman, const char *nama_tanaman, const char *sumber, float stok_lama, float stok_baru) {
     if (stok_lama == stok_baru) {
         return;
     }
@@ -168,8 +168,12 @@ void catatPerubahanStok(int id_tanaman, char nama_tanaman[50], char sumber[30], 
     }
 
     baru->id_tanaman = id_tanaman;
-    strcpy(baru->nama_tanaman, nama_tanaman);
-    strcpy(baru->sumber, sumber);
+    strncpy(baru->nama_tanaman, nama_tanaman, sizeof(baru->nama_tanaman) - 1);
+    baru->nama_tanaman[sizeof(baru->nama_tanaman) - 1] = '\0';
+
+    strncpy(baru->sumber, sumber, sizeof(baru->sumber) - 1);
+    baru->sumber[sizeof(baru->sumber) - 1] = '\0';
+
     baru->stok_lama = stok_lama;
     baru->perubahan = stok_baru - stok_lama;
     baru->stok_baru = stok_baru;
@@ -242,19 +246,19 @@ void tambahDataTanaman() {
         return;
     }
 
-    printf("\nMasukkan nama tanaman      : ");
+    printf("Masukkan nama tanaman      : ");
     fgets(tanamanBaru.nama, sizeof(tanamanBaru.nama), stdin);
     tanamanBaru.nama[strcspn(tanamanBaru.nama, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
-    printf("\nMasukkan kategori tanaman  :");
+    printf("Masukkan kategori tanaman  : ");
     fgets(tanamanBaru.kategori, sizeof(tanamanBaru.kategori), stdin);
     tanamanBaru.kategori[strcspn(tanamanBaru.kategori, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
-    printf("\nMasukkan satuan tanaman    :");
+    printf("Masukkan satuan tanaman    : ");
     fgets(tanamanBaru.satuan, sizeof(tanamanBaru.satuan), stdin);
     tanamanBaru.satuan[strcspn(tanamanBaru.satuan, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
-    printf("\nMasukkan harga jual tanaman: ");
+    printf("Masukkan harga jual tanaman: ");
     scanf("%f", &tanamanBaru.harga_jual);
     while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (tanamanBaru.harga_jual < 0) {
@@ -262,7 +266,7 @@ void tambahDataTanaman() {
         return;
     }
 
-    printf("\nMasukkan stok tanaman      : ");
+    printf("Masukkan stok tanaman      : ");
     scanf("%f", &tanamanBaru.stok);
     while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (tanamanBaru.stok < 0) {
@@ -298,7 +302,7 @@ void ubahDataTanaman() {
     printf("\nData tanaman saat ini:\n");
     printf("ID: %d | Nama: %s | Kategori: %s | Satuan: %s | Harga Jual: %.0f | Stok: %.2f\n", dataTanamanUbah.id, dataTanamanUbah.nama, dataTanamanUbah.kategori, dataTanamanUbah.satuan, dataTanamanUbah.harga_jual, dataTanamanUbah.stok);
 
-    printf("\nUbah ID tanaman        : ");
+    printf("Ubah ID tanaman        : ");
     scanf("%d", &id_tanaman_baru);
     while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (id_tanaman_baru != id_tanaman_lama && cariTanamanById(id_tanaman_baru) != NULL) {
@@ -307,20 +311,20 @@ void ubahDataTanaman() {
     }
     dataTanamanUbah.id = id_tanaman_baru;
 
-    printf("\nUbah nama tanaman      : ");
+    printf("Ubah nama tanaman      : ");
     fgets(dataTanamanUbah.nama, sizeof(dataTanamanUbah.nama), stdin);
     dataTanamanUbah.nama[strcspn(dataTanamanUbah.nama, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
-    printf("\nUbah kategori tanaman  :");
+    printf("Ubah kategori tanaman  : ");
     fgets(dataTanamanUbah.kategori, sizeof(dataTanamanUbah.kategori), stdin);
     dataTanamanUbah.kategori[strcspn(dataTanamanUbah.kategori, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
-    printf("\nUbah satuan tanaman    :");
+    printf("Ubah satuan tanaman    : ");
     fgets(dataTanamanUbah.satuan, sizeof(dataTanamanUbah.satuan), stdin);
     dataTanamanUbah.satuan[strcspn(dataTanamanUbah.satuan, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
     float hargaJualLama = dataTanamanUbah.harga_jual;
-    printf("\nUbah harga jual tanaman: ");
+    printf("Ubah harga jual tanaman: ");
     scanf("%f", &dataTanamanUbah.harga_jual);
     while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (dataTanamanUbah.harga_jual < 0) {
@@ -330,7 +334,7 @@ void ubahDataTanaman() {
     }
 
     float stokTanamanLama = dataTanamanUbah.stok;
-    printf("\nUbah stok tanaman      : ");
+    printf("Ubah stok tanaman      : ");
     scanf("%f", &dataTanamanUbah.stok);
     while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (dataTanamanUbah.stok < 0) {
@@ -384,11 +388,11 @@ void hapusDataTanaman() {
         if (dataTanamanHapus.stok > 0) {
             catatPerubahanStok(dataTanamanHapus.id, dataTanamanHapus.nama, "Hapus Tanaman", dataTanamanHapus.stok, 0.0f);
         }
-        printf("\nPenghapusan data tanaman berhasil!\n");
+        printf("Penghapusan data tanaman berhasil!\n");
         hapusTanamanById(id_tanaman);
     }
     else {
-        printf("\nPenghapusan data dibatalkan.\n");
+        printf("Penghapusan data dibatalkan.\n");
     }
 
     return;
@@ -455,10 +459,10 @@ void menu2KelolaTanaman() {
                 cariDataTanaman();
                 break;
             case 0:
-                printf("\nKembali ke menu utama...\n");
+                printf("Kembali ke menu utama...\n");
                 break;
             default:
-                printf("\nPilihan tidak valid! Silakan masukkan angka 0 - 5.\n");
+                printf("Pilihan tidak valid! Silakan masukkan angka 0 - 5.\n");
                 break;
         }
     } while (opsi != 0);
@@ -486,7 +490,7 @@ void tambahHasilPanen() {
     }
     dataPanenBaru.id_tanaman = nodeTanamanCari->data.id;
 
-    printf("\nMasukkan tanggal panen (DD-MM-YYYY): ");
+    printf("Masukkan tanggal panen (DD-MM-YYYY): ");
     fgets(dataPanenBaru.tanggal, sizeof(dataPanenBaru.tanggal), stdin);
     if (strchr(dataPanenBaru.tanggal, '\n') == NULL) {
         while (getchar() != '\n'); // Buang sisa karakter jika input >= 10 karakter
@@ -494,7 +498,7 @@ void tambahHasilPanen() {
         dataPanenBaru.tanggal[strcspn(dataPanenBaru.tanggal, "\n")] = '\0';
     }
 
-    printf("\nMasukkan jumlah hasil panen (angka): ");
+    printf("Masukkan jumlah hasil panen (angka): ");
     scanf("%f", &dataPanenBaru.jumlah_panen);
     while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (dataPanenBaru.jumlah_panen <= 0) {
@@ -502,16 +506,16 @@ void tambahHasilPanen() {
         return;
     }
 
-    printf("\nMasukkan kualitas panen            : ");
+    printf("Masukkan kualitas panen            : ");
     fgets(dataPanenBaru.kualitas, sizeof(dataPanenBaru.kualitas), stdin);
     dataPanenBaru.kualitas[strcspn(dataPanenBaru.kualitas, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
-    printf("\nMasukkan lokasi panen              : ");
+    printf("Masukkan lokasi panen              : ");
     fgets(dataPanenBaru.lokasi, sizeof(dataPanenBaru.lokasi), stdin);
     dataPanenBaru.lokasi[strcspn(dataPanenBaru.lokasi, "\n")] = '\0'; // Menghilangkan enter menjadi escape character string
 
     insertPanenNode(dataPanenBaru);
-    printf("\nPenambahan data panen berhasil!\n");
+    printf("Penambahan data panen berhasil!\n");
 
     float stokLama = nodeTanamanCari->data.stok;
     nodeTanamanCari->data.stok += dataPanenBaru.jumlah_panen;
@@ -619,7 +623,7 @@ void rekapitulasiPanen() {
         int totalFrekuensi = 0;
         float totalSemuaPanen = 0.0f;
 
-        printf("\n=================== Rekapitulasi Panen Periode %s ===================\n", periodeTarget);
+        printf("\n==================== Rekapitulasi Panen Periode %s ====================\n", periodeTarget);
         printf("%-8s | %-20s | %-12s | %-15s | %-10s\n",
                "ID", "Nama Komoditas", "Frekuensi", "Total Panen", "Satuan");
         printf("----------------------------------------------------------------------------\n");
@@ -718,7 +722,7 @@ void menu3PencatatanHasilPanen() {
 /* FITUR 1: Awal, Tampilkan stok */
 void tampilkanStok() {
     int adaData = 0;
-    printf("\n==================================== Daftar Stok =====================================\n");
+    printf("\n====================================== Daftar Stok ======================================\n");
     printf("%-6s | %-20s | %-15s | %-8s | %-14s | %-10s\n",
            "ID", "Nama Tanaman", "Kategori", "Satuan", "Harga Jual", "Stok");
     printf("-----------------------------------------------------------------------------------------\n");
@@ -770,7 +774,7 @@ void cariStok() {
         return;
     }
 
-    printf("\n=================================== Data Stok Tanaman ====================================\n");
+    printf("\n=================================== Data Stok Tanaman ===================================\n");
     printf("%-6s | %-20s | %-15s | %-8s | %-14s | %-10s\n",
            "ID", "Nama Tanaman", "Kategori", "Satuan", "Harga Jual", "Stok");
     printf("-----------------------------------------------------------------------------------------\n");
