@@ -861,4 +861,46 @@ void riwayatPerubahanStok () {
 
 
 /* Tampilan MENU 4 */
+void menu4PengelolaanPersediaan() {
+    int opsi;
+    do {
+        printf("\n========= Pengelolaan Persediaan =========\n");
+        printf("Ketik angka 0 - 4 untuk memilih submenu:\n");
+        printf("0. Kembali ke menu utama\n");
+        printf("1. Tampilkan stok\n");
+        printf("2. Cari stok komoditas\n");
+        printf("3. Periksa stok minimum\n");
+        printf("4. Riwayat perubahan stok\n");
+        printf("Pilihan Anda: ");
+        
+        if (scanf("%d", &opsi) != 1) {
+            while (getchar() != '\n');
+            opsi = -1;
+        } else {
+            while (getchar() != '\n');
+        }
+
+        switch (opsi) {
+            case 1:
+                tampilkanStok();
+                break;
+            case 2:
+                cariStok();
+                break;
+            case 3:
+                periksaStokMinimum();
+                break;
+            case 4:
+                riwayatPerubahanStok();
+                break;
+            case 0:
+                printf("\nKembali ke menu utama...\n");
+                break;
+            default:
+                printf("\nPilihan tidak valid! Silakan masukkan angka 0 - 4.\n");
+                break;
+        }
+    } while (opsi != 0);
+    return;
+}
 /* MENU 4: Akhir */
