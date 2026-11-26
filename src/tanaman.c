@@ -6,6 +6,7 @@
 #include "storage_undo.h"
 
 int id_panen_terakhir = 1;
+NodeLogStok *headLogStok = NULL;
 
 // Function hashTanaman untuk melakukan hashing index dengan menggunakan id
 unsigned int hashTanaman(int id) {
@@ -155,6 +156,48 @@ void hapusPanenById(int id_panen) {
 }
 
 
+// Function catatPerubahanStok untuk mencatat seluruh kegiatan yang mengubah stok sebuah komoditas
+void catatPerubahanStok(int id_tanaman, char nama_tanaman[50], char sumber[30], float stok_lama, float stok_baru) {
+    if (stok_lama == stok_baru) {
+        return;
+    }
+
+    NodeLogStok *baru = (NodeLogStok*) malloc(sizeof(NodeLogStok));
+    if (baru == NULL) {
+        return;
+    }
+
+    baru->id_tanaman = id_tanaman;
+    strcpy(baru->nama_tanaman, nama_tanaman);
+    strcpy(baru->sumber, sumber);
+    baru->stok_lama = stok_lama;
+    baru->perubahan = stok_baru - stok_lama;
+    baru->stok_baru = stok_baru;
+    baru->next = headLogStok;
+    headLogStok = baru;
+
+    return;
+}
+
+
+// Function simpanKeFileTanaman untuk menyimpan semua data tanaman ke dalam file
+void simpanKeFileTanaman(FILE *fp) {
+    for (int i = 0; i < TABLE_SIZE_TANAMAN; i++) {
+        NodeTanaman *curr = hashTableTanaman[i];
+        while (curr != NULL) {
+            fprintf(fp, "%d|%s|%s|%s|%.2f|%.2f\n",
+                    curr->data.id,
+                    curr->data.nama,
+                    curr->data.kategori,
+                    curr->data.satuan,
+                    curr->data.harga_jual,
+                    curr->data.stok);
+            curr = curr->next;
+        }
+    }
+}
+
+
 /* MENU 2 (Kelola Data Tanaman): Awal*/
 /* FITUR 1: Awal, Tampilkan daftar tanaman (ID, Nama, Kategori, Satuan, Harga Jual, Stok) */
 void tampilkanDaftarTanaman() {
@@ -228,10 +271,10 @@ void tambahDataTanaman() {
     }
 
     insertTanamanNode(tanamanBaru);
-    printf("\nPenambahan data tanaman berhasil!");
-
+    catatPerubahanStok(tanamanBaru.id, tanamanBaru.nama, "Tambah Tanaman", 0.0f, tanamanBaru.stok);
     // TODO: Tambahkan function untuk push ke riwayat (setelah storage_undo dikerjakan)
 
+    printf("\nPenambahan data tanaman berhasil!");
     return;
 }
 /* FITUR 2: Akhir */
@@ -305,9 +348,10 @@ void ubahDataTanaman() {
         nodeTanamanUbah->data = dataTanamanUbah;
     }
 
-    printf("\nPerubahan data tanaman berhasil diubah!\n");
-
+    catatPerubahanStok(dataTanamanUbah.id, dataTanamanUbah.nama, "Edit Data (Menu 2)", stokTanamanLama, dataTanamanUbah.stok);
     // TODO: Tambahkan function untuk push ke riwayat (setelah storage_undo dikerjakan)
+
+    printf("\nPerubahan data tanaman berhasil diubah!\n");
 
     return;
 }
@@ -337,6 +381,9 @@ void hapusDataTanaman() {
     scanf(" %c", &konfirmasi);
     while (getchar() != '\n'); // Mengambil "enter" yang tersisa
     if (konfirmasi == 'y' || konfirmasi == 'Y') {
+        if (dataTanamanHapus.stok > 0) {
+            catatPerubahanStok(dataTanamanHapus.id, dataTanamanHapus.nama, "Hapus Tanaman", dataTanamanHapus.stok, 0.0f);
+        }
         printf("\nPenghapusan data tanaman berhasil!\n");
         hapusTanamanById(id_tanaman);
     }
@@ -466,7 +513,9 @@ void tambahHasilPanen() {
     insertPanenNode(dataPanenBaru);
     printf("\nPenambahan data panen berhasil!\n");
 
+    float stokLama = nodeTanamanCari->data.stok;
     nodeTanamanCari->data.stok += dataPanenBaru.jumlah_panen;
+    catatPerubahanStok(nodeTanamanCari->data.id, nodeTanamanCari->data.nama, "Input Panen", stokLama, nodeTanamanCari->data.stok);
 
     // TODO: Tambahkan function untuk push ke riwayat (setelah storage_undo dikerjakan)
 
@@ -721,7 +770,7 @@ void cariStok() {
         return;
     }
 
-    printf("\n==================================== Data Stok Tanaman =====================================\n");
+    printf("\n=================================== Data Stok Tanaman ====================================\n");
     printf("%-6s | %-20s | %-15s | %-8s | %-14s | %-10s\n",
            "ID", "Nama Tanaman", "Kategori", "Satuan", "Harga Jual", "Stok");
     printf("-----------------------------------------------------------------------------------------\n");
@@ -740,10 +789,74 @@ void cariStok() {
 
 
 /* FITUR 3: Awal, Periksa stok minimum (minta user batas minimum stok, lalu cetak semua data tanaman yang kurang dari batas minimum) */
+void periksaStokMinimum() {
+    int adaData = 0, totalMenipis = 0, totalHabis = 0;
+    float batasMinimum = 0;
+
+    printf("\n===== Periksa Stok Minimum =====");
+    printf("\nMasukkan batas stok minimum: ");
+    scanf("%f", &batasMinimum);
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
+    if (batasMinimum < 0) {
+        printf("\nBatas stok minimum tidak bisa negatif.\n");
+        return;
+    }
+
+    printf("\n================================= Daftar Stok di Bawah Batas Minimum ==================================\n");
+    printf("%-6s | %-20s | %-15s | %-8s | %-14s | %-10s | %-12s\n",
+           "ID", "Nama Tanaman", "Kategori", "Satuan", "Harga Jual", "Stok", "Status");
+    printf("-------------------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < TABLE_SIZE_TANAMAN; i++)
+    {
+        NodeTanaman *curr = hashTableTanaman[i];
+        while (curr != NULL) {
+            if (curr->data.stok < batasMinimum) {
+                adaData = 1;
+                printf("%-6d | %-20s | %-15s | %-8s | Rp %-11.0f | %-10.2f | %-12s\n", 
+                curr->data.id, curr->data.nama, curr->data.kategori, curr->data.satuan, curr->data.harga_jual, curr->data.stok, ((curr->data.stok == 0) ? "HABIS" : "MENIPIS"));
+                (curr->data.stok == 0) ? totalHabis++ : totalMenipis++;
+            }
+            curr = curr->next;
+        }
+    }
+    printf("-------------------------------------------------------------------------------------------------------\n");
+
+    if (adaData == 1) {
+        printf("Total komoditas yang habis  : %d\n", totalHabis);
+        printf("Total komoditas yang menipis: %d\n", totalMenipis);
+    }
+    else {
+        printf("Semua stok komoditas di atas batas minimal\n");
+    }
+    printf("=======================================================================================================\n");
+    return;
+}
 /* FITUR 3: Akhir */
 
 
 /* FITUR 4: Awal, Riwayat perubahan stok */
+void riwayatPerubahanStok () {
+    printf("\n======================================= Riwayat Perubahan Stok ========================================\n");
+    printf("%-6s | %-20s | %-20s | %-12s | %-12s | %-12s\n",
+           "ID", "Nama Tanaman", "Sumber Perubahan", "Stok Awal", "Perubahan", "Stok Akhir");
+    printf("-------------------------------------------------------------------------------------------------------\n");
+
+    if (headLogStok == NULL) {
+        printf("Belum ada riwayat perubahan stok.\n");
+        printf("=======================================================================================================\n");
+        return;
+    }
+
+    NodeLogStok *curr = headLogStok;
+    while (curr != NULL) {
+        printf("%-6d | %-20s | %-20s | %-12.2f | %+-12.2f | %-12.2f\n",
+           curr->id_tanaman, curr->nama_tanaman, curr->sumber, curr->stok_lama, curr->perubahan, curr->stok_baru);
+        curr = curr->next;
+    }
+    printf("=======================================================================================================\n");
+    return;
+}
 /* FITUR 4: Akhir */
 
 
