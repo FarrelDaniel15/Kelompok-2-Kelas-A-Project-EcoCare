@@ -36,6 +36,9 @@ void simpanTanaman(void) {
         return;
     }
 
+    // Tulis ulang header kolom di baris pertama
+    fprintf(fp, "ID|Nama|Kategori|Satuan|Harga Jual|Stok\n");
+
     simpanKeFileTanaman(fp);
     fclose(fp);
 }
