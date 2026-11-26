@@ -24,7 +24,7 @@ void hapusPanenById(int id_panen);
 // ==========================================
 // 3. HELPER LOG PERUBAHAN STOK
 // ==========================================
-void catatPerubahanStok(int id_tanaman, char nama_tanaman[50], char sumber[30], float stok_lama, float stok_baru);
+void catatPerubahanStok(int id_tanaman, const char *nama_tanaman, const char *sumber, float stok_lama, float stok_baru);
 
 // ==========================================
 // 4. MENU 2: KELOLA DATA TANAMAN
