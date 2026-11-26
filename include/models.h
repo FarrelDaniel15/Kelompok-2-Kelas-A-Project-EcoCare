@@ -125,6 +125,16 @@ typedef struct NodeRiwayat {
     struct NodeRiwayat *next;
 } NodeRiwayat;
 
+typedef struct NodeLogStok {
+    int id_tanaman;
+    char nama_tanaman[50];
+    char sumber[30];       // e.g., "Input Tanaman", "Edit Menu 2", "Hasil Panen", "Penjualan", "Undo"
+    float stok_lama;
+    float perubahan;       // +50.00 or -20.00
+    float stok_baru;
+    struct NodeLogStok *next;
+} NodeLogStok;
+
 // ==========================================
 // 5. DEKLARASI GLOBAL HEAD, TAIL & TOP (extern)
 // ==========================================
