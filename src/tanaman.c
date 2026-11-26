@@ -370,7 +370,7 @@ void cariDataTanaman() {
 }
 /* FITUR 5: Akhir */
 
-/* Tampilan Menu 2 */
+/* Tampilan MENU 2 */
 void menu2KelolaTanaman() {
     int opsi;
     do {
@@ -618,11 +618,12 @@ void rekapitulasiPanen() {
     else {
         printf("\nPilihan tidak valid\n");
     }
+    return;
 }
 /* FITUR 3: Akhir */
 
 
-/* Tampilan Menu 3 */
+/* Tampilan MENU 3 */
 void menu3PencatatanHasilPanen() {
     int opsi;
     do {
@@ -662,3 +663,89 @@ void menu3PencatatanHasilPanen() {
     return;
 }
 /* MENU 3: Akhir*/
+
+
+/* MENU 4: (Pengelolaan Persediaan): Awal */
+/* FITUR 1: Awal, Tampilkan stok */
+void tampilkanStok() {
+    int adaData = 0;
+    printf("\n==================================== Daftar Stok =====================================\n");
+    printf("%-6s | %-20s | %-15s | %-8s | %-14s | %-10s\n",
+           "ID", "Nama Tanaman", "Kategori", "Satuan", "Harga Jual", "Stok");
+    printf("-----------------------------------------------------------------------------------------\n");
+
+    float totalStok = 0, stokKomoditasTerbanyak = -1.0f;
+    char komoditasTerbanyak[50] = "-", satuanKomoditasTerbanyak[15];
+
+    for (int i = 0; i < TABLE_SIZE_TANAMAN; i++) {
+        NodeTanaman *curr = hashTableTanaman[i];
+        while (curr != NULL) {
+            printf("%-6d | %-20s | %-15s | %-8s | Rp %-11.0f | %-10.2f\n", 
+                curr->data.id, curr->data.nama, curr->data.kategori, curr->data.satuan, curr->data.harga_jual, curr->data.stok);
+            adaData = 1;
+            totalStok += curr->data.stok;
+
+            if (stokKomoditasTerbanyak <= curr->data.stok) {
+                strcpy(komoditasTerbanyak, curr->data.nama);
+                strcpy(satuanKomoditasTerbanyak, curr->data.satuan);
+                stokKomoditasTerbanyak = curr->data.stok;
+            }
+            curr = curr->next;
+        }
+    }
+
+    if (!adaData) {
+            printf("Tidak ada data stok tanaman.\n");
+        }
+        else {
+            printf("-----------------------------------------------------------------------------------------\n");
+            printf("Total Seluruh Stok: %.2f | Komoditas terbanyak: %s (%.2f %s)\n", totalStok, komoditasTerbanyak, stokKomoditasTerbanyak, satuanKomoditasTerbanyak);
+        }
+        printf("=========================================================================================\n");
+    return;
+}
+/* FITUR 1: Akhir */
+
+
+/* FITUR 2: Awal, Cari stok komoditas */
+void cariStok() {
+    int id_tanaman;
+
+    printf("\n===== Cari Stok =====");
+    printf("\nMasukkan ID tanaman        : ");
+    scanf("%d", &id_tanaman);
+    while (getchar() != '\n'); // Mengambil "enter" yang tersisa
+    NodeTanaman *nodeTanamanCekStok = cariTanamanById(id_tanaman);
+    if (nodeTanamanCekStok == NULL) {
+        printf("\nID tanaman tidak ditemukan\n");
+        return;
+    }
+
+    printf("\n==================================== Data Stok Tanaman =====================================\n");
+    printf("%-6s | %-20s | %-15s | %-8s | %-14s | %-10s\n",
+           "ID", "Nama Tanaman", "Kategori", "Satuan", "Harga Jual", "Stok");
+    printf("-----------------------------------------------------------------------------------------\n");
+    printf("%-6d | %-20s | %-15s | %-8s | Rp %-11.0f | %-10.2f\n", 
+        nodeTanamanCekStok->data.id, nodeTanamanCekStok->data.nama, nodeTanamanCekStok->data.kategori, nodeTanamanCekStok->data.satuan, nodeTanamanCekStok->data.harga_jual, nodeTanamanCekStok->data.stok);
+    if (nodeTanamanCekStok->data.stok == 0) {
+        printf("CATATAN: Stok HABIS\n");
+    }
+    else {
+        printf("CATATAN: Stok TERSEDIA\n");
+    }
+    printf("=========================================================================================\n");
+    return;
+}
+/* FITUR 2: Akhir */
+
+
+/* FITUR 3: Awal, Periksa stok minimum (minta user batas minimum stok, lalu cetak semua data tanaman yang kurang dari batas minimum) */
+/* FITUR 3: Akhir */
+
+
+/* FITUR 4: Awal, Riwayat perubahan stok */
+/* FITUR 4: Akhir */
+
+
+/* Tampilan MENU 4 */
+/* MENU 4: Akhir */
