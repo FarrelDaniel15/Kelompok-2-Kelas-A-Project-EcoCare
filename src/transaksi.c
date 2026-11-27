@@ -9,18 +9,18 @@
 static const char *STATUS_DISTRIBUSI = {"Diproses", "Dalam perjalanan", "Terkirim"};
 
 NodePenjualan *tambahNodePenjualan (TransaksiPenjualan *tanaman){
-        NodePenjualan *baru = (NodePenjualan *) malloc(sizeof(NodePenjualan));
-        if(baru == NULL){
+        NodePenjualan *penjualanBaru = (NodePenjualan *) malloc(sizeof(NodePenjualan));
+        if(penjualanBaru == NULL){
             puts(" ! Memori tidak cukup. ");
             return NULL;
         }
-        baru -> data = *tanaman;
-        baru -> next = NULL;
-        baru -> prev = tailPenjualan;
-        if(tailPenjualan == NULL) headPenjualan = baru;
-        else tailPenjualan -> next = baru;
-        tailPenjualan = baru;
-        return baru;
+        penjualanBaru -> data = *tanaman;
+        penjualanBaru -> next = NULL;
+        penjualanBaru -> prev = tailPenjualan;
+        if(tailPenjualan == NULL) headPenjualan = penjualanBaru;
+        else tailPenjualan -> next = penjualanBaru;
+        tailPenjualan = penjualanBaru;
+        return penjualanBaru;
 }
 
 NodePenjualan *cariPenjualan (int id){
@@ -66,3 +66,20 @@ int idPenjualanBerikutnya(void){
     return maksimum + 1;
 }
 
+NodeDistribusi *tambahNodeDistribusi(Distribusi *dist){
+    NodeDistribusi *distribusiBaru = (NodeDistribusi *) malloc(sizeof(NodeDistribusi));
+    if(distribusiBaru == NULL){
+        puts(" ! Memori tidak cukup. ");
+        return NULL;
+    }
+    distribusiBaru -> data = *dist;
+    distribusiBaru -> next = NULL;
+    distribusiBaru -> prev = tailDistribusi;
+    if(tailDistribusi == NULL){
+        headDistribusi = distribusiBaru;
+    }else{
+        tailDistribusi -> next = distribusiBaru;
+    }
+    tailDistribusi = distribusiBaru;
+    return distribusiBaru;
+}
