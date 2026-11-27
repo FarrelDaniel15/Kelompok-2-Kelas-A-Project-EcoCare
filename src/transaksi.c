@@ -46,3 +46,14 @@ int hapusNodePenjualan(int id){
     free(p);
     return 1;
 }
+
+void bebaskanPenjualan(void){
+    NodePenjualan *p = headPenjualan;
+    while (p != NULL){
+        NodePenjualan *tmp = p -> next;
+        free(p);
+        p = tmp;
+    }
+    headPenjualan = tailPenjualan = NULL;
+}
+
