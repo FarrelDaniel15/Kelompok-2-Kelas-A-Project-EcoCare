@@ -57,3 +57,12 @@ void bebaskanPenjualan(void){
     headPenjualan = tailPenjualan = NULL;
 }
 
+int idPenjualanBerikutnya(void){
+    int maksimum = 0;
+    for(NodePenjualan *p = headPenjualan; p; p = p -> next)
+        if(p -> data.id_transaksi > maksimum){
+            maksimum = p -> data.id_transaksi;
+        }
+    return maksimum + 1;
+}
+
