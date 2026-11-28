@@ -83,3 +83,11 @@ NodeDistribusi *tambahNodeDistribusi(Distribusi *dist){
     tailDistribusi = distribusiBaru;
     return distribusiBaru;
 }
+
+NodeDistribusi *cariDistribusi(int id){
+    for(NodeDistribusi *p = headDistribusi; p != NULL; p = p ->next)
+        if(p -> data.id_distribusi == id){
+            return p;
+        }
+    return NULL;
+}
